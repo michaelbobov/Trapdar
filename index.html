@@ -354,25 +354,25 @@
     }
     
     .custom-map-marker {
-      width: 20px;
-      height: 20px;
+      width: 16px;
+      height: 16px;
       border-radius: 50%;
       animation: pulse 2.5s infinite;
     }
     
     .high-marker {
-      background-color: rgba(240, 32, 32, 0.8);
-      box-shadow: 0 0 10px rgba(240, 32, 32, 0.5);
+      background-color: rgba(240, 32, 32, 0.75);
+      box-shadow: 0 0 8px rgba(240, 32, 32, 0.4);
     }
     
     .medium-marker {
-      background-color: rgba(255, 152, 0, 0.8);
-      box-shadow: 0 0 10px rgba(255, 152, 0, 0.5);
+      background-color: rgba(255, 152, 0, 0.75);
+      box-shadow: 0 0 8px rgba(255, 152, 0, 0.4);
     }
     
     .low-marker {
-      background-color: rgba(76, 175, 80, 0.8);
-      box-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
+      background-color: rgba(76, 175, 80, 0.75);
+      box-shadow: 0 0 8px rgba(76, 175, 80, 0.4);
     }
     
     /* Animation variations for staggered effect */
@@ -391,19 +391,23 @@
 
     /* Hotspot labels */
     .hotspot-label {
-      font-size: 12px;
+      font-size: 10px;
       white-space: nowrap;
-      background-color: rgba(255, 255, 255, 0.8);
-      padding: 2px 6px;
-      border-radius: 4px;
-      transform: translateY(-12px);
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+      background-color: rgba(255, 255, 255, 0.7);
+      padding: 1px 4px;
+      border-radius: 3px;
+      transform: translateY(-10px);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
       text-align: center;
       pointer-events: none;
+      max-width: 80px;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .label-container {
       background: none !important;
+      z-index: 400;
     }
     
     /* Popup styling */
