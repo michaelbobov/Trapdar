@@ -1,45 +1,36 @@
 # Trapdar
 
-> Escape the tourist traps—experience travel like a local!
-
-Trapdar is a web application designed to help travelers identify tourist traps and discover authentic local places. The app provides a simple and intuitive interface for searching cities, restaurants, or activities to determine their 'tourist trap' status.
+Trapdar is an interactive web application that helps travelers identify tourist traps and discover authentic local experiences in cities around the world.
 
 ## Features
 
-- Search for places, restaurants, or activities
-- View tourist trap ratings and local alternatives
-- Interactive heatmap showing tourist density
-- User recommendations for authentic experiences
+- Interactive world map with city-level tourist trap ratings
+- Detailed neighborhood ratings and recommendations
+- Color-coded scoring system for easy identification of tourist traps and local gems
+- Country-level to neighborhood-level navigation
+- Intuitive breadcrumb navigation system
+- Responsive design for mobile and desktop use
 
-## Tech Stack
+## Technologies Used
 
-- **Frontend**: Next.js, TypeScript, Tailwind CSS
-- **Data Visualization**: Interactive heatmaps
+- HTML5/CSS3
+- JavaScript (Vanilla)
+- Node.js (for the local development server)
 
-## Getting Started
+## How to Run Locally
 
-### Prerequisites
+1. Clone this repository
+2. Navigate to the frontend directory
+3. Run `node server.js`
+4. Open your browser to http://localhost:3000
 
-- Node.js (version 16 or higher)
-- npm
+## Usage
 
-### Installation
+- Search for countries, cities, or neighborhoods using the search bar
+- Click on locations to see tourist trap scores and recommendations
+- Navigate from countries to cities to neighborhoods using the dropdown
+- Colors indicate authenticity: Green (authentic) to Red (tourist trap)
 
-1. Clone the repository:
-```bash
-git clone https://github.com/yourusername/trapdar.git
-cd trapdar
-```
+## License
 
-2. Install dependencies:
-```bash
-cd frontend
-npm install
-```
-
-3. Run the development server:
-```bash
-npm run dev
-```
-
-4. Open [http://localhost:3000](http://localhost:3000) in your browser to see the application. 
+MIT 
