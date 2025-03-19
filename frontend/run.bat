@@ -1,0 +1,6 @@
+@echo off
+echo Installing required dependencies...
+npm install express --save
+echo Starting Trapdar application...
+echo Open your browser at http://localhost:3000
+node server.js 
