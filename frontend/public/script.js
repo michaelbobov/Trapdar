@@ -1136,20 +1136,38 @@ document.addEventListener('DOMContentLoaded', function() {
       // Add click event
       marker.on('click', function() {
         searchInput.value = spot.name;
-        updateSearchDropdown(spot.name);
         
+        // Show the city's trap score information
+        showTrapScore(spot.name);
+        
+        // Show the city map if we have data for this city
         if (locationDatabase[spot.name]) {
           showCityMap(spot.name);
+          
+          // Scroll to the city map/trap score section
+          cityMapContainer.scrollIntoView({ behavior: 'smooth' });
+          
+          // Hide the world heatmap
+          worldHeatmap.style.display = 'none';
         }
       });
       
       // Make labels clickable too
       labelMarker.on('click', function() {
         searchInput.value = spot.name;
-        updateSearchDropdown(spot.name);
         
+        // Show the city's trap score information
+        showTrapScore(spot.name);
+        
+        // Show the city map if we have data for this city
         if (locationDatabase[spot.name]) {
           showCityMap(spot.name);
+          
+          // Scroll to the city map/trap score section
+          cityMapContainer.scrollIntoView({ behavior: 'smooth' });
+          
+          // Hide the world heatmap
+          worldHeatmap.style.display = 'none';
         }
       });
     });
