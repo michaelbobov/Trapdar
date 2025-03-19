@@ -45,6 +45,32 @@
       width: 100%;
     }
     
+    .search-hierarchy-indicator {
+      font-size: 0.8rem;
+      color: #666;
+      margin: 6px 0 4px 0;
+      display: none;
+    }
+    
+    .search-hierarchy-indicator.active {
+      display: flex;
+      align-items: center;
+    }
+    
+    .search-hierarchy-item {
+      cursor: pointer;
+      color: #0066cc;
+    }
+    
+    .search-hierarchy-item:hover {
+      text-decoration: underline;
+    }
+    
+    .search-hierarchy-separator {
+      margin: 0 8px;
+      color: #ccc;
+    }
+    
     .search-input {
       width: 100%;
       padding: 12px 48px 12px 16px;
@@ -597,6 +623,48 @@
       color: #999;
     }
     
+    /* Navigation improvements */
+    .navigation-hint {
+      background-color: #f0f7ff;
+      padding: 8px 16px;
+      font-size: 0.85rem;
+      color: #0066cc;
+      border-bottom: 1px solid #e0e9f5;
+      display: flex;
+      align-items: center;
+    }
+    
+    .navigation-hint:before {
+      content: "🔍";
+      margin-right: 8px;
+    }
+    
+    .hierarchy-arrow {
+      display: inline-block;
+      margin: 0 5px;
+      color: #aaa;
+      font-size: 10px;
+    }
+    
+    .active-selection {
+      background-color: #f2f9ff !important;
+      border-left: 3px solid #0066cc;
+    }
+    
+    .selection-path {
+      display: flex;
+      align-items: center;
+      padding: 6px 12px;
+      background-color: #f8f8f8;
+      font-size: 0.9rem;
+    }
+    
+    .dropdown-section-title {
+      font-weight: 500;
+      color: #555;
+      margin: 0 0 6px 0;
+    }
+    
     @media (max-width: 600px) {
       .header h1 {
         font-size: 2rem;
@@ -620,6 +688,9 @@
     <div class="search-box">
       <input type="text" class="search-input" placeholder="Search for a country, city, or neighborhood...">
       <button class="search-button">🔍</button>
+    </div>
+    <div class="search-hierarchy-indicator" id="search-hierarchy">
+      <!-- Will show the current navigation path -->
     </div>
     <div class="search-dropdown">
       <!-- Dropdown items will be populated dynamically -->
@@ -693,5 +764,274 @@
   
   <!-- Main script -->
   <script src="script.js"></script>
+  
+  <!-- Navigation enhancement script -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Get necessary elements
+      const searchInput = document.querySelector('.search-input');
+      const searchDropdown = document.querySelector('.search-dropdown');
+      const searchButton = document.querySelector('.search-button');
+      const hierarchyIndicator = document.getElementById('search-hierarchy');
+      
+      // Navigation context
+      let navContext = {
+        country: null,
+        city: null,
+        neighborhood: null
+      };
+      
+      // Add immediate dropdown functionality when focusing the search input
+      searchInput.addEventListener('focus', function() {
+        if (searchInput.value.trim() === '') {
+          // If search is empty and focused, show global navigation options
+          if (typeof showGlobalView === 'function') {
+            showGlobalView();
+          } else {
+            // Fallback if showGlobalView isn't available yet
+            setTimeout(() => {
+              if (typeof showGlobalView === 'function') {
+                showGlobalView();
+              }
+            }, 500);
+          }
+        }
+      });
+      
+      // Enhanced click handling for the dropdown
+      searchDropdown.addEventListener('click', function(e) {
+        // Find the closest clickable element
+        const clickedItem = e.target.closest('.search-dropdown-country, .search-dropdown-city, .search-dropdown-neighborhood, .breadcrumb-nav a');
+        
+        if (!clickedItem) return;
+        
+        // For breadcrumb navigation links
+        if (clickedItem.closest('.breadcrumb-nav')) {
+          // Let original handlers work
+          return;
+        }
+        
+        // Get the current value to determine navigation context
+        const currentValue = searchInput.value.trim();
+        
+        // Prevent dropdown from closing for country and city selections
+        if (clickedItem.classList.contains('search-dropdown-country')) {
+          const countryName = clickedItem.getAttribute('data-country') || 
+                            clickedItem.textContent.replace('(top pick)', '').trim();
+          
+          // Update navigation context
+          navContext.country = countryName;
+          navContext.city = null;
+          navContext.neighborhood = null;
+          
+          // Update hierarchy
+          updateHierarchyIndicator();
+          
+          // Set search input value
+          searchInput.value = countryName;
+          
+          // Show cities for this country immediately
+          if (typeof showCountryCitiesDropdown === 'function') {
+            // Add slight delay to ensure the dropdown update works correctly
+            setTimeout(() => {
+              showCountryCitiesDropdown(countryName);
+              
+              // Add navigation hint
+              addNavigationHint('Select a city in ' + countryName);
+            }, 100);
+          }
+          
+          e.preventDefault();
+          e.stopPropagation();
+          return;
+        }
+        
+        // Handle city selection
+        if (clickedItem.classList.contains('search-dropdown-city')) {
+          const cityName = clickedItem.getAttribute('data-city') || 
+                          clickedItem.textContent.replace('(top pick)', '').trim();
+          
+          // Get parent country if available
+          const parentCountry = clickedItem.getAttribute('data-parent-country') || navContext.country;
+          
+          // Update navigation context
+          if (parentCountry) navContext.country = parentCountry;
+          navContext.city = cityName;
+          navContext.neighborhood = null;
+          
+          // Update hierarchy
+          updateHierarchyIndicator();
+          
+          // Set search input value
+          searchInput.value = cityName;
+          
+          // Show neighborhoods for this city immediately
+          if (typeof showCityNeighborhoodsDropdown === 'function') {
+            setTimeout(() => {
+              showCityNeighborhoodsDropdown(cityName);
+              
+              // Add navigation hint
+              addNavigationHint('Select a district in ' + cityName);
+            }, 100);
+          }
+          
+          e.preventDefault();
+          e.stopPropagation();
+          return;
+        }
+        
+        // Handle neighborhood selection
+        if (clickedItem.classList.contains('search-dropdown-neighborhood')) {
+          // Clone the node to avoid modifying the original
+          const tempNode = clickedItem.cloneNode(true);
+          
+          // Remove any tourist level span elements
+          const touristLevelSpan = tempNode.querySelector('.tourist-level');
+          if (touristLevelSpan) {
+            tempNode.removeChild(touristLevelSpan);
+          }
+          
+          // Now get the clean text
+          const neighborhoodName = tempNode.textContent.trim();
+          
+          // Get parent city if available
+          const parentCity = clickedItem.getAttribute('data-parent-city') || navContext.city;
+          
+          // Update navigation context
+          if (parentCity) navContext.city = parentCity;
+          navContext.neighborhood = neighborhoodName;
+          
+          // Update hierarchy
+          updateHierarchyIndicator();
+        }
+      });
+      
+      // Update the hierarchy indicator
+      function updateHierarchyIndicator() {
+        hierarchyIndicator.innerHTML = '';
+        hierarchyIndicator.classList.remove('active');
+        
+        // Add items only if we have context
+        if (navContext.country || navContext.city || navContext.neighborhood) {
+          hierarchyIndicator.classList.add('active');
+          
+          // Add world/global item
+          const worldItem = document.createElement('span');
+          worldItem.className = 'search-hierarchy-item';
+          worldItem.textContent = 'World';
+          worldItem.addEventListener('click', function() {
+            // Reset context
+            navContext = { country: null, city: null, neighborhood: null };
+            updateHierarchyIndicator();
+            
+            // Show global view
+            if (typeof showGlobalView === 'function') {
+              showGlobalView();
+            }
+            
+            searchInput.value = '';
+          });
+          hierarchyIndicator.appendChild(worldItem);
+          
+          // Add country if available
+          if (navContext.country) {
+            // Add separator
+            const separator1 = document.createElement('span');
+            separator1.className = 'search-hierarchy-separator';
+            separator1.textContent = '›';
+            hierarchyIndicator.appendChild(separator1);
+            
+            // Add country
+            const countryItem = document.createElement('span');
+            countryItem.className = 'search-hierarchy-item';
+            countryItem.textContent = navContext.country;
+            countryItem.addEventListener('click', function() {
+              // Reset city and neighborhood
+              navContext.city = null;
+              navContext.neighborhood = null;
+              updateHierarchyIndicator();
+              
+              // Update search and dropdown
+              searchInput.value = navContext.country;
+              if (typeof showCountryCitiesDropdown === 'function') {
+                showCountryCitiesDropdown(navContext.country);
+              }
+            });
+            hierarchyIndicator.appendChild(countryItem);
+            
+            // Add city if available
+            if (navContext.city) {
+              // Add separator
+              const separator2 = document.createElement('span');
+              separator2.className = 'search-hierarchy-separator';
+              separator2.textContent = '›';
+              hierarchyIndicator.appendChild(separator2);
+              
+              // Add city
+              const cityItem = document.createElement('span');
+              cityItem.className = 'search-hierarchy-item';
+              cityItem.textContent = navContext.city;
+              cityItem.addEventListener('click', function() {
+                // Reset neighborhood
+                navContext.neighborhood = null;
+                updateHierarchyIndicator();
+                
+                // Update search and dropdown
+                searchInput.value = navContext.city;
+                if (typeof showCityNeighborhoodsDropdown === 'function') {
+                  showCityNeighborhoodsDropdown(navContext.city);
+                }
+              });
+              hierarchyIndicator.appendChild(cityItem);
+              
+              // Add neighborhood if available
+              if (navContext.neighborhood) {
+                // Add separator
+                const separator3 = document.createElement('span');
+                separator3.className = 'search-hierarchy-separator';
+                separator3.textContent = '›';
+                hierarchyIndicator.appendChild(separator3);
+                
+                // Add neighborhood
+                const neighborhoodItem = document.createElement('span');
+                neighborhoodItem.className = 'search-hierarchy-item';
+                neighborhoodItem.textContent = navContext.neighborhood;
+                hierarchyIndicator.appendChild(neighborhoodItem);
+              }
+            }
+          }
+        }
+      }
+      
+      // Helper function to add navigation hints to the dropdown
+      function addNavigationHint(message) {
+        // Check if hint already exists
+        let hint = searchDropdown.querySelector('.navigation-hint');
+        if (!hint) {
+          hint = document.createElement('div');
+          hint.className = 'navigation-hint';
+          searchDropdown.insertBefore(hint, searchDropdown.firstChild);
+        }
+        hint.textContent = message;
+      }
+      
+      // Add search button functionality
+      searchButton.addEventListener('click', function() {
+        // If input has value, perform search
+        if (searchInput.value.trim() !== '') {
+          // Trigger search by updating dropdown
+          if (typeof updateSearchDropdown === 'function') {
+            updateSearchDropdown(searchInput.value);
+          }
+        } else {
+          // If empty, show global options
+          if (typeof showGlobalView === 'function') {
+            showGlobalView();
+          }
+        }
+        searchDropdown.classList.add('active');
+      });
+    });
+  </script>
 </body>
 </html> 
