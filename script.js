@@ -1361,26 +1361,51 @@ document.addEventListener('DOMContentLoaded', function() {
           // Generate dynamic trap score based on tourist level
           const baseScore = touristLevel === "high" ? 75 : (touristLevel === "medium" ? 50 : 30);
           
-          // Create temporary trap data
+          // Create more varied trap data based on neighborhood name and tourist level
+          // Generate a "hash" from the location name to get consistent but different results
+          const nameHash = [...location].reduce((acc, char) => acc + char.charCodeAt(0), 0) % 5;
+          
+          // Arrays of varied recommendation templates
+          const trapTemplates = [
+            [`${location} Main Square`, `${location} Visitor Center`, `${location} Souvenir Shop`, `${location} Tourist Cafe`, `${location} Tour Meeting Point`],
+            [`Tourist Information Center`, `${location} Market (Tourist Section)`, `Overpriced ${location} View Bar`, `${location} Guided Tours`, `${location} Photo Spot`],
+            [`${location} Tourist Restaurant Row`, `Branded ${location} Gift Shop`, `${location} Bus Tour Stop`, `${location} Street Performers Area`, `International Chain Cafe`],
+            [`${location} Fridge Magnet Shop`, `${location} Tourist Viewpoint`, `${location} Hop-On Hop-Off Stop`, `Fast Food Chain in ${location}`, `${location} Map Sales`],
+            [`${location} Shopping Street`, `${location} Currency Exchange`, `Walking Tour Starting Point`, `${location} Tourist Selfie Spot`, `${location} Welcome Center`]
+          ];
+          
+          const gemTemplates = [
+            [`${location} Local Bistro`, `${location} Hidden Park`, `${location} Neighborhood Cafe`, `${location} Family Bakery`, `${location} Secret Viewpoint`],
+            [`Hidden Alley in ${location}`, `Local's Favorite Deli`, `${location} Community Garden`, `Family-run Coffee Shop`, `${location} Morning Market`],
+            [`${location} Corner Pub`, `Resident's Picnic Spot`, `${location} Art Studio`, `Neighborhood Bookshop`, `${location} Rooftop View`],
+            [`${location} Food Co-op`, `Quiet Tea House`, `${location} Local Brewery`, `Courtyard Restaurant`, `${location} Street Food`],
+            [`${location} Vintage Shop`, `Local Music Venue`, `${location} Bakery`, `Community Theater`, `${location} Craft Workshop`]
+          ];
+          
+          // Add some variety to scores too
+          const trapScoreVariance = (nameHash * 3) % 10;
+          const gemScoreVariance = (nameHash * 2) % 8;
+          
+          // Create temporary trap data with more variety
           trapData = {
             areaScore: baseScore,
             traps: [
-              { name: `${location} Main Square`, score: baseScore + 15 },
-              { name: `${location} Visitor Center`, score: baseScore + 12 },
-              { name: `${location} Souvenir Shop`, score: baseScore + 8 },
-              { name: `${location} Tourist Cafe`, score: baseScore + 5 },
-              { name: `${location} Tour Meeting Point`, score: baseScore }
+              { name: trapTemplates[nameHash][0], score: baseScore + 15 + trapScoreVariance },
+              { name: trapTemplates[nameHash][1], score: baseScore + 12 + trapScoreVariance - 2 },
+              { name: trapTemplates[nameHash][2], score: baseScore + 8 + trapScoreVariance - 4 },
+              { name: trapTemplates[nameHash][3], score: baseScore + 5 + trapScoreVariance - 6 },
+              { name: trapTemplates[nameHash][4], score: baseScore + trapScoreVariance - 8 }
             ],
             gems: [
-              { name: `${location} Local Bistro`, score: 100 - baseScore },
-              { name: `${location} Hidden Park`, score: 100 - (baseScore - 5) },
-              { name: `${location} Neighborhood Cafe`, score: 100 - (baseScore - 10) },
-              { name: `${location} Family Bakery`, score: 100 - (baseScore - 15) },
-              { name: `${location} Secret Viewpoint`, score: 100 - (baseScore - 20) }
+              { name: gemTemplates[nameHash][0], score: Math.max(5, Math.min(95, 100 - baseScore - gemScoreVariance)) },
+              { name: gemTemplates[nameHash][1], score: Math.max(5, Math.min(95, 100 - (baseScore - 5) - gemScoreVariance + 2)) },
+              { name: gemTemplates[nameHash][2], score: Math.max(5, Math.min(95, 100 - (baseScore - 10) - gemScoreVariance + 4)) },
+              { name: gemTemplates[nameHash][3], score: Math.max(5, Math.min(95, 100 - (baseScore - 15) - gemScoreVariance + 6)) },
+              { name: gemTemplates[nameHash][4], score: Math.max(5, Math.min(95, 100 - (baseScore - 20) - gemScoreVariance + 8)) }
             ]
           };
           
-          console.log(`Generated generic trap score data for neighborhood ${location}`);
+          console.log(`Generated varied trap score data for neighborhood ${location}`);
         } else {
           console.log(`No trap data found for ${location} and couldn't generate generic data`);
           trapScoreContainer.classList.remove('active');
