@@ -1338,79 +1338,71 @@ document.addEventListener('DOMContentLoaded', function() {
         }
       }
       
-      // If still no data, generate generic trap score data for neighborhoods
+      // If still no data, generate appropriate trap score data
       if (!trapData) {
+        // Check location type and gather context
+        let locationType = "unknown";
+        let touristLevel = "medium";
+        let parentLocation = null;
+        
         // Check if this is a neighborhood in our locationDatabase
         let isNeighborhood = false;
-        let parentCity = null;
-        let touristLevel = "medium";
-        
-        // Search through each city's neighborhoods
         Object.keys(locationDatabase).forEach(city => {
           if (locationDatabase[city].neighborhoods) {
             const matchingNeighborhood = locationDatabase[city].neighborhoods.find(n => n.name === location);
             if (matchingNeighborhood) {
               isNeighborhood = true;
-              parentCity = city;
+              locationType = "neighborhood";
+              parentLocation = city;
               touristLevel = matchingNeighborhood.touristLevel;
             }
           }
         });
         
-        if (isNeighborhood) {
-          // Generate dynamic trap score based on tourist level
-          const baseScore = touristLevel === "high" ? 75 : (touristLevel === "medium" ? 50 : 30);
+        // Check if this is a city
+        if (!isNeighborhood && locationDatabase[location]) {
+          locationType = "city";
           
-          // Create more varied trap data based on neighborhood name and tourist level
-          // Generate a "hash" from the location name to get consistent but different results
-          const nameHash = [...location].reduce((acc, char) => acc + char.charCodeAt(0), 0) % 5;
-          
-          // Arrays of varied recommendation templates
-          const trapTemplates = [
-            [`${location} Main Square`, `${location} Visitor Center`, `${location} Souvenir Shop`, `${location} Tourist Cafe`, `${location} Tour Meeting Point`],
-            [`Tourist Information Center`, `${location} Market (Tourist Section)`, `Overpriced ${location} View Bar`, `${location} Guided Tours`, `${location} Photo Spot`],
-            [`${location} Tourist Restaurant Row`, `Branded ${location} Gift Shop`, `${location} Bus Tour Stop`, `${location} Street Performers Area`, `International Chain Cafe`],
-            [`${location} Fridge Magnet Shop`, `${location} Tourist Viewpoint`, `${location} Hop-On Hop-Off Stop`, `Fast Food Chain in ${location}`, `${location} Map Sales`],
-            [`${location} Shopping Street`, `${location} Currency Exchange`, `Walking Tour Starting Point`, `${location} Tourist Selfie Spot`, `${location} Welcome Center`]
-          ];
-          
-          const gemTemplates = [
-            [`${location} Local Bistro`, `${location} Hidden Park`, `${location} Neighborhood Cafe`, `${location} Family Bakery`, `${location} Secret Viewpoint`],
-            [`Hidden Alley in ${location}`, `Local's Favorite Deli`, `${location} Community Garden`, `Family-run Coffee Shop`, `${location} Morning Market`],
-            [`${location} Corner Pub`, `Resident's Picnic Spot`, `${location} Art Studio`, `Neighborhood Bookshop`, `${location} Rooftop View`],
-            [`${location} Food Co-op`, `Quiet Tea House`, `${location} Local Brewery`, `Courtyard Restaurant`, `${location} Street Food`],
-            [`${location} Vintage Shop`, `Local Music Venue`, `${location} Bakery`, `Community Theater`, `${location} Craft Workshop`]
-          ];
-          
-          // Add some variety to scores too
-          const trapScoreVariance = (nameHash * 3) % 10;
-          const gemScoreVariance = (nameHash * 2) % 8;
-          
-          // Create temporary trap data with more variety
-          trapData = {
-            areaScore: baseScore,
-            traps: [
-              { name: trapTemplates[nameHash][0], score: baseScore + 15 + trapScoreVariance },
-              { name: trapTemplates[nameHash][1], score: baseScore + 12 + trapScoreVariance - 2 },
-              { name: trapTemplates[nameHash][2], score: baseScore + 8 + trapScoreVariance - 4 },
-              { name: trapTemplates[nameHash][3], score: baseScore + 5 + trapScoreVariance - 6 },
-              { name: trapTemplates[nameHash][4], score: baseScore + trapScoreVariance - 8 }
-            ],
-            gems: [
-              { name: gemTemplates[nameHash][0], score: Math.max(5, Math.min(95, 100 - baseScore - gemScoreVariance)) },
-              { name: gemTemplates[nameHash][1], score: Math.max(5, Math.min(95, 100 - (baseScore - 5) - gemScoreVariance + 2)) },
-              { name: gemTemplates[nameHash][2], score: Math.max(5, Math.min(95, 100 - (baseScore - 10) - gemScoreVariance + 4)) },
-              { name: gemTemplates[nameHash][3], score: Math.max(5, Math.min(95, 100 - (baseScore - 15) - gemScoreVariance + 6)) },
-              { name: gemTemplates[nameHash][4], score: Math.max(5, Math.min(95, 100 - (baseScore - 20) - gemScoreVariance + 8)) }
-            ]
-          };
-          
-          console.log(`Generated varied trap score data for neighborhood ${location}`);
-        } else {
-          console.log(`No trap data found for ${location} and couldn't generate generic data`);
-          trapScoreContainer.classList.remove('active');
-          return;
+          // Try to determine the tourist level from neighborhoods
+          if (locationDatabase[location].neighborhoods && locationDatabase[location].neighborhoods.length > 0) {
+            // Count the frequency of each tourist level
+            const levelCounts = { high: 0, medium: 0, low: 0 };
+            locationDatabase[location].neighborhoods.forEach(n => {
+              levelCounts[n.touristLevel]++;
+            });
+            
+            // Determine the most common level
+            let maxCount = 0;
+            Object.keys(levelCounts).forEach(level => {
+              if (levelCounts[level] > maxCount) {
+                maxCount = levelCounts[level];
+                touristLevel = level;
+              }
+            });
+          }
         }
+        
+        // Check if this might be a country
+        if (locationType === "unknown" && countryDatabase && countryDatabase[location]) {
+          locationType = "country";
+          
+          // Try to determine tourist level based on cities
+          if (countryDatabase[location].cities && countryDatabase[location].cities.length > 0) {
+            // Just use a simple heuristic based on number of cities
+            if (countryDatabase[location].cities.length > 5) {
+              touristLevel = "high";
+            } else if (countryDatabase[location].cities.length > 2) {
+              touristLevel = "medium";
+            } else {
+              touristLevel = "low";
+            }
+          }
+        }
+        
+        // Generate trap data based on location type and context
+        trapData = generateUniqueRecommendations(location, locationType, touristLevel, parentLocation);
+        
+        console.log(`Generated unique trap score data for ${locationType} ${location}`);
       }
     }
     
@@ -1458,6 +1450,317 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Show the trap score container
     trapScoreContainer.classList.add('active');
+  }
+  
+  // Generate unique recommendations based on location type
+  function generateUniqueRecommendations(location, locationType, touristLevel, parentLocation) {
+    // Base score depends on tourist level
+    const baseScore = touristLevel === "high" ? 75 : (touristLevel === "medium" ? 50 : 30);
+    
+    // Create a unique hash for this location to ensure consistent but varied results
+    const uniqueString = `${location}-${locationType}-${parentLocation || ""}`;
+    const nameHash = [...uniqueString].reduce((acc, char) => acc + char.charCodeAt(0), 0);
+    
+    // Use a larger modulo to get more variety (15 different templates)
+    const templateSet = nameHash % 15;
+    
+    // Create different templates based on location type
+    let trapTemplates, gemTemplates;
+    
+    if (locationType === "country") {
+      trapTemplates = [
+        // Country-specific tourist trap templates - Set 1
+        [
+          `${location} International Airport Shops`,
+          `${location} Capital City Tour Buses`,
+          `Currency Exchange in ${location}`,
+          `${location} Hotel Airport Shuttles`,
+          `Guided Tours of ${location}`
+        ],
+        // Set 2
+        [
+          `${location} Souvenir Megastore`,
+          `Fast Food Chains in ${location}`,
+          `${location} Tourist Information Centers`,
+          `Airport Taxi Services in ${location}`,
+          `${location} Group Tour Packages`
+        ],
+        // Set 3
+        [
+          `${location} Tourist SIM Cards`,
+          `${location} Duty-Free Shopping`,
+          `International Hotel Chains in ${location}`,
+          `${location} Airport Currency Exchange`,
+          `${location} Tour Bus Company`
+        ],
+        // And so on for 15 total templates...
+        [
+          `${location} Tourist Resort Areas`,
+          `${location} Tourist Maps`,
+          `${location} Tourist Police`,
+          `${location} Tourist-Only Events`,
+          `${location} Airport Lounges`
+        ],
+        [
+          `Cruise Ship Ports in ${location}`,
+          `${location} Souvenir Markets`,
+          `${location} Tourist Tax Refunds`,
+          `${location} Chain Restaurants`,
+          `${location} Tour Guide Services`
+        ]
+      ];
+      
+      gemTemplates = [
+        // Country-specific local gems templates - Set 1
+        [
+          `${location} Local Food Markets`,
+          `${location} Regional Cuisine`,
+          `${location} Family-Owned Vineyards`,
+          `${location} Traditional Festivals`,
+          `${location} Countryside Trails`
+        ],
+        // Set 2
+        [
+          `${location} Local Transportation`,
+          `Hidden Villages in ${location}`,
+          `${location} Local Cooking Classes`,
+          `Rural Homestays in ${location}`,
+          `${location} Artisan Workshops`
+        ],
+        // Set 3
+        [
+          `${location} Local Grocery Stores`,
+          `${location} Local Sports Events`,
+          `${location} Community Markets`,
+          `${location} Regional Parks`,
+          `${location} Specialty Museums`
+        ],
+        // And so on for 15 total templates...
+        [
+          `${location} Local Radio Stations`,
+          `${location} Community Gardens`,
+          `${location} Neighborhood Festivals`,
+          `${location} Public Libraries`,
+          `${location} Regional Delicacies`
+        ],
+        [
+          `${location} Tea Houses`,
+          `${location} Local Breweries`,
+          `${location} Cultural Centers`,
+          `${location} Handcraft Shops`,
+          `${location} Family Restaurants`
+        ]
+      ];
+    } else if (locationType === "city") {
+      trapTemplates = [
+        // City-specific tourist trap templates - Set 1
+        [
+          `${location} City Tours`,
+          `${location} Hotel Strip`,
+          `Main Shopping Street in ${location}`,
+          `${location} Tourist Information Center`,
+          `${location} Hop-On Hop-Off Bus`
+        ],
+        // Set 2
+        [
+          `${location} Tourist District`,
+          `${location} City Pass Sales Office`,
+          `${location} Souvenir Shops`,
+          `${location} Tourist Restaurants`,
+          `${location} Double-Decker Tour Bus`
+        ],
+        // Set 3
+        [
+          `${location} Photo Spots`,
+          `${location} City Center Shops`,
+          `${location} Ferry Tours`,
+          `${location} Tourist Trams`,
+          `${location} Main Square`
+        ],
+        // And more for variety...
+        [
+          `${location} Wax Museum`,
+          `${location} Tourist Police Station`,
+          `${location} Airport Shuttle Stop`,
+          `${location} Tourist Map Stands`,
+          `${location} Observation Deck`
+        ],
+        [
+          `${location} Boat Tours`,
+          `${location} Central Mall`,
+          `${location} Gift Shops`,
+          `${location} Walking Tour Meeting Point`,
+          `${location} Tourist Information Kiosks`
+        ]
+      ];
+      
+      gemTemplates = [
+        // City-specific local gems templates - Set 1
+        [
+          `${location} Farmer's Market`,
+          `${location} Hidden Garden Café`,
+          `${location} Local Bakery`,
+          `${location} Waterfront Park`,
+          `${location} Historic Library`
+        ],
+        // Set 2
+        [
+          `${location} Community Theater`,
+          `${location} Sunrise Spot`,
+          `${location} Workers' Lunch Spot`,
+          `${location} Craft Beer Bar`,
+          `${location} Neighborhood Deli`
+        ],
+        // Set 3
+        [
+          `${location} Record Store`,
+          `${location} Indie Cinema`,
+          `${location} Public Gardens`,
+          `${location} Jazz Club`,
+          `${location} Vintage Bookstore`
+        ],
+        // And more for variety...
+        [
+          `${location} Botanical Gardens`,
+          `${location} Family Restaurant`,
+          `${location} Cycling Path`,
+          `${location} Breakfast Joint`,
+          `${location} Historic Café`
+        ],
+        [
+          `${location} Underground Art Space`,
+          `${location} Street Food Market`,
+          `${location} Hidden Courtyard`,
+          `${location} Artisan Shops`,
+          `${location} City Viewpoint`
+        ]
+      ];
+    } else {
+      // Neighborhood-specific or default templates
+      trapTemplates = [
+        // Neighborhood-specific tourist trap templates - Set 1
+        [
+          `${location} Main Square`,
+          `${location} Visitor Center`,
+          `${location} Souvenir Shop`,
+          `${location} Tourist Café`,
+          `${location} Tour Meeting Point`
+        ],
+        // Set 2
+        [
+          `Tourist Information Booth in ${location}`,
+          `${location} Market (Tourist Section)`,
+          `Overpriced ${location} View Bar`,
+          `${location} Guided Tours`,
+          `${location} Photo Spot`
+        ],
+        // Set 3
+        [
+          `${location} Tourist Restaurant Row`,
+          `Branded ${location} Gift Shop`,
+          `${location} Bus Tour Stop`,
+          `${location} Street Performers Area`,
+          `International Chain Café in ${location}`
+        ],
+        // And more for variety...
+        [
+          `${location} Fridge Magnet Shop`,
+          `${location} Tourist Viewpoint`,
+          `${location} Hop-On Hop-Off Stop`,
+          `Fast Food Chain in ${location}`,
+          `${location} Map Sales`
+        ],
+        [
+          `${location} Shopping Street`,
+          `${location} Currency Exchange`,
+          `Walking Tour Starting Point in ${location}`,
+          `${location} Tourist Selfie Spot`,
+          `${location} Welcome Center`
+        ]
+      ];
+      
+      gemTemplates = [
+        // Neighborhood-specific local gems templates - Set 1
+        [
+          `${location} Local Bistro`,
+          `${location} Hidden Park`,
+          `${location} Neighborhood Café`,
+          `${location} Family Bakery`,
+          `${location} Secret Viewpoint`
+        ],
+        // Set 2
+        [
+          `Hidden Alley in ${location}`,
+          `Local's Favorite Deli in ${location}`,
+          `${location} Community Garden`,
+          `Family-run Coffee Shop in ${location}`,
+          `${location} Morning Market`
+        ],
+        // Set 3
+        [
+          `${location} Corner Pub`,
+          `Resident's Picnic Spot in ${location}`,
+          `${location} Art Studio`,
+          `Neighborhood Bookshop in ${location}`,
+          `${location} Rooftop View`
+        ],
+        // And more for variety...
+        [
+          `${location} Food Co-op`,
+          `Quiet Tea House in ${location}`,
+          `${location} Local Brewery`,
+          `Courtyard Restaurant in ${location}`,
+          `${location} Street Food`
+        ],
+        [
+          `${location} Vintage Shop`,
+          `Local Music Venue in ${location}`,
+          `${location} Bakery`,
+          `Community Theater in ${location}`,
+          `${location} Craft Workshop`
+        ]
+      ];
+    }
+    
+    // Expand template arrays to have at least 15 options by reusing with variations
+    while (trapTemplates.length < 15) {
+      const baseSet = trapTemplates[trapTemplates.length % 5];
+      trapTemplates.push(baseSet.map(item => item.replace(location, `${location} City`)));
+    }
+    
+    while (gemTemplates.length < 15) {
+      const baseSet = gemTemplates[gemTemplates.length % 5];
+      gemTemplates.push(baseSet.map(item => item.replace(location, `${location} Town`)));
+    }
+    
+    // Ensure our template selection is valid
+    const trapTemplateIndex = templateSet % trapTemplates.length;
+    const gemTemplateIndex = (templateSet + 7) % gemTemplates.length; // Use a different template set for gems
+    
+    // Add some variety to scores with different variance for each location type
+    const trapScoreVariance = (nameHash * 3) % 10;
+    const gemScoreVariance = (nameHash * 2) % 8;
+    
+    // Create trap data with more variety and consistent but different recommendations
+    const finalTrapData = {
+      areaScore: baseScore,
+      traps: [
+        { name: trapTemplates[trapTemplateIndex][0], score: baseScore + 15 + trapScoreVariance },
+        { name: trapTemplates[trapTemplateIndex][1], score: baseScore + 12 + trapScoreVariance - 2 },
+        { name: trapTemplates[trapTemplateIndex][2], score: baseScore + 8 + trapScoreVariance - 4 },
+        { name: trapTemplates[trapTemplateIndex][3], score: baseScore + 5 + trapScoreVariance - 6 },
+        { name: trapTemplates[trapTemplateIndex][4], score: baseScore + trapScoreVariance - 8 }
+      ],
+      gems: [
+        { name: gemTemplates[gemTemplateIndex][0], score: Math.max(5, Math.min(95, 100 - baseScore - gemScoreVariance)) },
+        { name: gemTemplates[gemTemplateIndex][1], score: Math.max(5, Math.min(95, 100 - (baseScore - 5) - gemScoreVariance + 2)) },
+        { name: gemTemplates[gemTemplateIndex][2], score: Math.max(5, Math.min(95, 100 - (baseScore - 10) - gemScoreVariance + 4)) },
+        { name: gemTemplates[gemTemplateIndex][3], score: Math.max(5, Math.min(95, 100 - (baseScore - 15) - gemScoreVariance + 6)) },
+        { name: gemTemplates[gemTemplateIndex][4], score: Math.max(5, Math.min(95, 100 - (baseScore - 20) - gemScoreVariance + 8)) }
+      ]
+    };
+    
+    return finalTrapData;
   }
   
   // Helper function to get the color class based on score for places
