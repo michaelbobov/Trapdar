@@ -822,9 +822,214 @@ document.addEventListener('DOMContentLoaded', function() {
         { name: "Saturn Bar", score: 17 },
         { name: "Satsuma Cafe", score: 28 }
       ]
+    },
+    // Neighborhoods - Adding missing neighborhoods
+    "Queens": {
+      areaScore: 45,
+      traps: [
+        { name: "Flushing Meadows Carnival", score: 65 },
+        { name: "LaGuardia Airport Food Court", score: 78 },
+        { name: "Queens Center Mall", score: 69 },
+        { name: "Citi Field Concessions", score: 72 },
+        { name: "Little India Souvenir Shops", score: 58 }
+      ],
+      gems: [
+        { name: "Astoria Beer Garden", score: 26 },
+        { name: "MoMA PS1", score: 18 },
+        { name: "Flushing Food Courts", score: 24 },
+        { name: "Gantry Plaza State Park", score: 15 },
+        { name: "Corona Park Local Vendors", score: 22 }
+      ]
+    },
+    "Bronx": {
+      areaScore: 38,
+      traps: [
+        { name: "Yankee Stadium Shops", score: 72 },
+        { name: "Bronx Zoo Gift Shop", score: 67 },
+        { name: "Little Italy Arthur Avenue Tourist Restaurants", score: 63 },
+        { name: "New York Botanical Garden Cafe", score: 56 },
+        { name: "The Hub Shopping Area", score: 59 }
+      ],
+      gems: [
+        { name: "City Island Seafood", score: 21 },
+        { name: "Bronx Night Market", score: 18 },
+        { name: "Roberto's Restaurant", score: 26 },
+        { name: "Wave Hill Gardens", score: 14 },
+        { name: "Bronx Brewery", score: 24 }
+      ]
+    },
+    "Staten Island": {
+      areaScore: 35,
+      traps: [
+        { name: "Staten Island Ferry Terminal Shops", score: 62 },
+        { name: "Empire Outlets", score: 68 },
+        { name: "Staten Island Mall Food Court", score: 73 },
+        { name: "South Beach Boardwalk Vendors", score: 59 },
+        { name: "St. George Theater Area Restaurants", score: 54 }
+      ],
+      gems: [
+        { name: "Enoteca Maria", score: 19 },
+        { name: "Greenbelt Nature Center", score: 12 },
+        { name: "Sri Lankan Restaurants in Tompkinsville", score: 22 },
+        { name: "Historic Richmond Town", score: 16 },
+        { name: "Flagship Brewing Company", score: 25 }
+      ]
+    },
+    "Latin Quarter": {
+      areaScore: 76,
+      traps: [
+        { name: "Shakespeare & Co. Bookstore", score: 83 },
+        { name: "Latin Quarter Tourist Restaurants", score: 79 },
+        { name: "Saint-Michel Fountain Area", score: 86 },
+        { name: "Rue de la Huchette Bars", score: 81 },
+        { name: "Panthéon Gift Shop", score: 72 }
+      ],
+      gems: [
+        { name: "Jardin des Plantes", score: 26 },
+        { name: "Rue Mouffetard Morning Market", score: 18 },
+        { name: "Le Comptoir du Panthéon", score: 23 },
+        { name: "La Mosquée de Paris Café", score: 27 },
+        { name: "Arènes de Lutèce", score: 15 }
+      ]
+    },
+    "Belleville": {
+      areaScore: 29,
+      traps: [
+        { name: "Belleville Park Viewpoint", score: 45 },
+        { name: "Rue de Belleville Street Art Tours", score: 51 },
+        { name: "Aux Folies (during peak hours)", score: 48 },
+        { name: "Bus Touristique Belleville Stop", score: 53 },
+        { name: "Parc de Belleville Café", score: 42 }
+      ],
+      gems: [
+        { name: "Le Baratin", score: 14 },
+        { name: "Dong Huong Asian Market", score: 12 },
+        { name: "Combat Gallery", score: 19 },
+        { name: "Au Lavoir Bar", score: 22 },
+        { name: "Rue Denoyez Street Art", score: 27 }
+      ]
+    },
+    "Canal Saint-Martin": {
+      areaScore: 41,
+      traps: [
+        { name: "Canal Boat Tours", score: 62 },
+        { name: "Weekend Canal-side Cafés", score: 58 },
+        { name: "Chez Prune (during peak hours)", score: 67 },
+        { name: "Le Comptoir Général (after 8pm)", score: 59 },
+        { name: "Artazart Design Bookstore", score: 52 }
+      ],
+      gems: [
+        { name: "Du Pain et des Idées", score: 16 },
+        { name: "Le Verre Volé", score: 21 },
+        { name: "Ten Belles Coffee", score: 25 },
+        { name: "Philou Restaurant", score: 18 },
+        { name: "Café de la Marine", score: 23 }
+      ]
+    },
+    "Asakusa": {
+      areaScore: 72,
+      traps: [
+        { name: "Nakamise Shopping Street", score: 87 },
+        { name: "Asakusa Rickshaw Tours", score: 82 },
+        { name: "Kaminarimon Gate Photo Spot", score: 79 },
+        { name: "Tokyo Skytree Tourist Restaurants", score: 76 },
+        { name: "Hanayashiki Amusement Park", score: 71 }
+      ],
+      gems: [
+        { name: "Sometaro Okonomiyaki", score: 24 },
+        { name: "Asakusa Yokocho", score: 19 },
+        { name: "Kakimori Custom Notebook Shop", score: 22 },
+        { name: "Café Daikanyama", score: 17 },
+        { name: "Suzukien Asakusa", score: 31 }
+      ]
+    },
+    "Shimokitazawa": {
+      areaScore: 28,
+      traps: [
+        { name: "Shimokitazawa Vintage Tour Groups", score: 42 },
+        { name: "Bear Pond Espresso (peak hours)", score: 48 },
+        { name: "Shimokitazawa Food Tour Stops", score: 52 },
+        { name: "Mother's Ruin Shop", score: 39 },
+        { name: "Weekend Shimokitazawa Market", score: 45 }
+      ],
+      gems: [
+        { name: "Shirube Izakaya", score: 16 },
+        { name: "B&B Record Shop", score: 12 },
+        { name: "Flipper's Pancakes", score: 23 },
+        { name: "Haight & Ashbury Vintage", score: 18 },
+        { name: "Ichibanchi Restaurant", score: 21 }
+      ]
+    },
+    "Koenji": {
+      areaScore: 26,
+      traps: [
+        { name: "Koenji Vintage Shopping Tour Spots", score: 42 },
+        { name: "Look Up Records (weekend crowds)", score: 38 },
+        { name: "Awa Odori Festival Main Stage", score: 46 },
+        { name: "Café Mona (tour group hours)", score: 49 },
+        { name: "PAL Shotengai Entrance", score: 37 }
+      ],
+      gems: [
+        { name: "Tensuke Tempura", score: 14 },
+        { name: "Cocktail Book", score: 17 },
+        { name: "Kita-Kore Building", score: 21 },
+        { name: "Rikodo Used Books", score: 13 },
+        { name: "Niku No Takumi", score: 19 }
+      ]
+    },
+    "Testaccio": {
+      areaScore: 33,
+      traps: [
+        { name: "Testaccio Market Tourist Stalls", score: 52 },
+        { name: "MACRO Museum Café", score: 46 },
+        { name: "Piazza Testaccio Restaurants", score: 49 },
+        { name: "Monte Testaccio Clubs", score: 59 },
+        { name: "Nuovo Mercato di Testaccio Food Tours", score: 55 }
+      ],
+      gems: [
+        { name: "Da Remo Pizza", score: 17 },
+        { name: "Taverna Volpetti", score: 21 },
+        { name: "Mordi e Vai Sandwich Stall", score: 15 },
+        { name: "Trapizzino", score: 24 },
+        { name: "Casa Manco Pizza", score: 19 }
+      ]
+    },
+    "Monti": {
+      areaScore: 48,
+      traps: [
+        { name: "Monti Urban Market", score: 67 },
+        { name: "Via dei Serpenti Cafés", score: 63 },
+        { name: "La Bottega del Cioccolato", score: 59 },
+        { name: "Fatamorgana Gelato", score: 55 },
+        { name: "Ai Tre Scalini (weekends)", score: 62 }
+      ],
+      gems: [
+        { name: "Urbana 47", score: 23 },
+        { name: "Fafiuché Wine Bar", score: 19 },
+        { name: "Forno Monti", score: 24 },
+        { name: "Zia Rosetta", score: 18 },
+        { name: "Barzilai Gelato", score: 27 }
+      ]
+    },
+    "Prati": {
+      areaScore: 45,
+      traps: [
+        { name: "Vatican Museum Exit Area", score: 78 },
+        { name: "Cola di Rienzo Shopping Street", score: 65 },
+        { name: "Castel Sant'Angelo Café", score: 69 },
+        { name: "Via Ottaviano Souvenir Shops", score: 75 },
+        { name: "Borgo Pio Tourist Restaurants", score: 71 }
+      ],
+      gems: [
+        { name: "Mercato Trionfale", score: 21 },
+        { name: "Pizzarium Bonci", score: 26 },
+        { name: "L'Arcangelo Restaurant", score: 19 },
+        { name: "Sistorante", score: 24 },
+        { name: "Gelateria dei Gracchi", score: 28 }
+      ]
     }
   };
-
+  
   // Add trap score data to neighborhoods
   Object.keys(locationDatabase).forEach(city => {
     if (locationDatabase[city].neighborhoods) {
@@ -1115,9 +1320,54 @@ document.addEventListener('DOMContentLoaded', function() {
         }
       }
       
+      // If still no data, generate generic trap score data for neighborhoods
       if (!trapData) {
-        trapScoreContainer.classList.remove('active');
-        return;
+        // Check if this is a neighborhood in our locationDatabase
+        let isNeighborhood = false;
+        let parentCity = null;
+        let touristLevel = "medium";
+        
+        // Search through each city's neighborhoods
+        Object.keys(locationDatabase).forEach(city => {
+          if (locationDatabase[city].neighborhoods) {
+            const matchingNeighborhood = locationDatabase[city].neighborhoods.find(n => n.name === location);
+            if (matchingNeighborhood) {
+              isNeighborhood = true;
+              parentCity = city;
+              touristLevel = matchingNeighborhood.touristLevel;
+            }
+          }
+        });
+        
+        if (isNeighborhood) {
+          // Generate dynamic trap score based on tourist level
+          const baseScore = touristLevel === "high" ? 75 : (touristLevel === "medium" ? 50 : 30);
+          
+          // Create temporary trap data
+          trapData = {
+            areaScore: baseScore,
+            traps: [
+              { name: `${location} Main Square`, score: baseScore + 15 },
+              { name: `${location} Visitor Center`, score: baseScore + 12 },
+              { name: `${location} Souvenir Shop`, score: baseScore + 8 },
+              { name: `${location} Tourist Cafe`, score: baseScore + 5 },
+              { name: `${location} Tour Meeting Point`, score: baseScore }
+            ],
+            gems: [
+              { name: `${location} Local Bistro`, score: 100 - baseScore },
+              { name: `${location} Hidden Park`, score: 100 - (baseScore - 5) },
+              { name: `${location} Neighborhood Cafe`, score: 100 - (baseScore - 10) },
+              { name: `${location} Family Bakery`, score: 100 - (baseScore - 15) },
+              { name: `${location} Secret Viewpoint`, score: 100 - (baseScore - 20) }
+            ]
+          };
+          
+          console.log(`Generated generic trap score data for neighborhood ${location}`);
+        } else {
+          console.log(`No trap data found for ${location} and couldn't generate generic data`);
+          trapScoreContainer.classList.remove('active');
+          return;
+        }
       }
     }
     
@@ -1541,6 +1791,10 @@ document.addEventListener('DOMContentLoaded', function() {
       // No map for country level, just show trap score
       showTrapScore(countryName, true);
       
+      // Show cities for this country
+      showCountryCitiesDropdown(countryName);
+      return; // Return early to avoid hiding the dropdown
+      
     } else if (selectedItem.classList.contains('search-dropdown-city')) {
       // Handle city selection
       if (selectedItem.hasAttribute('data-city')) {
@@ -1567,10 +1821,25 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Show trap score for the city
         showTrapScore(cityName);
+        
+        // Show neighborhoods for this city
+        showCityNeighborhoodsDropdown(cityName);
+        return; // Return early to avoid hiding the dropdown
       }
     } else if (selectedItem.classList.contains('search-dropdown-neighborhood')) {
       // Handle neighborhood selection
-      neighborhoodName = selectedItem.textContent.trim();
+      // Extract only the neighborhood name without tourist level
+      // Clone the element to avoid modifying the original
+      const tempNode = selectedItem.cloneNode(true);
+      
+      // Remove any tourist level span elements
+      const touristLevelSpan = tempNode.querySelector('.tourist-level');
+      if (touristLevelSpan) {
+        tempNode.removeChild(touristLevelSpan);
+      }
+      
+      // Now get the clean text
+      neighborhoodName = tempNode.textContent.trim();
       
       // Extract city name from the data attribute
       const parentCity = selectedItem.dataset.parentCity;
@@ -1593,6 +1862,189 @@ document.addEventListener('DOMContentLoaded', function() {
     searchDropdown.classList.remove('active');
   }
 
+  // Show dropdown with cities in a country
+  function showCountryCitiesDropdown(country) {
+    searchDropdown.innerHTML = '';
+    
+    // Add breadcrumb navigation
+    const breadcrumb = document.createElement('div');
+    breadcrumb.className = 'breadcrumb-nav';
+    breadcrumb.innerHTML = `
+      <a data-action="view-global">Global</a>
+      <span class="breadcrumb-separator">›</span>
+      <strong>${country}</strong>
+    `;
+    searchDropdown.appendChild(breadcrumb);
+    
+    if (countryDatabase[country] && countryDatabase[country].cities.length > 0) {
+      const citiesHeader = document.createElement('div');
+      citiesHeader.className = 'search-dropdown-header';
+      citiesHeader.textContent = `Cities in ${country}:`;
+      searchDropdown.appendChild(citiesHeader);
+      
+      countryDatabase[country].cities.forEach(city => {
+        const cityItem = document.createElement('div');
+        cityItem.className = 'search-dropdown-city';
+        cityItem.textContent = city;
+        cityItem.setAttribute('data-city', city);
+        cityItem.setAttribute('data-parent-country', country);
+        searchDropdown.appendChild(cityItem);
+      });
+      
+      // Attach event listeners to cities
+      attachDropdownEventListeners();
+      
+      // Add event listener to breadcrumb navigation
+      breadcrumb.querySelector('[data-action="view-global"]').addEventListener('click', function(e) {
+        e.stopPropagation();
+        showGlobalView();
+      });
+      
+      // Show the dropdown
+      searchDropdown.classList.add('active');
+    }
+  }
+
+  // Show dropdown with neighborhoods in a city
+  function showCityNeighborhoodsDropdown(city) {
+    searchDropdown.innerHTML = '';
+    
+    // Get parent country if available
+    const country = cityToCountry[city] || '';
+    
+    // Add breadcrumb navigation
+    const breadcrumb = document.createElement('div');
+    breadcrumb.className = 'breadcrumb-nav';
+    
+    if (country) {
+      breadcrumb.innerHTML = `
+        <a data-action="view-global">Global</a>
+        <span class="breadcrumb-separator">›</span>
+        <a data-action="view-country" data-country="${country}">${country}</a>
+        <span class="breadcrumb-separator">›</span>
+        <strong>${city}</strong>
+      `;
+    } else {
+      breadcrumb.innerHTML = `
+        <a data-action="view-global">Global</a>
+        <span class="breadcrumb-separator">›</span>
+        <strong>${city}</strong>
+      `;
+    }
+    
+    searchDropdown.appendChild(breadcrumb);
+    
+    const cityData = locationDatabase[city];
+    if (cityData && cityData.neighborhoods && cityData.neighborhoods.length > 0) {
+      const neighborhoodsHeader = document.createElement('div');
+      neighborhoodsHeader.className = 'search-dropdown-header';
+      neighborhoodsHeader.textContent = `Districts in ${city}:`;
+      searchDropdown.appendChild(neighborhoodsHeader);
+      
+      // Sort neighborhoods by tourist level (high to low)
+      const sortedNeighborhoods = [...cityData.neighborhoods].sort((a, b) => {
+        const levels = { "high": 3, "medium": 2, "low": 1 };
+        return levels[b.touristLevel] - levels[a.touristLevel];
+      });
+      
+      // Add all neighborhoods
+      sortedNeighborhoods.forEach(neighborhood => {
+        const neighborhoodItem = document.createElement('div');
+        neighborhoodItem.className = 'search-dropdown-neighborhood';
+        neighborhoodItem.textContent = neighborhood.name;
+        neighborhoodItem.dataset.parentCity = city;
+        
+        // Add tourist level indicator
+        const touristLevelClass = getTouristLevelClass(neighborhood.touristLevel);
+        const touristLevel = document.createElement('span');
+        touristLevel.className = `tourist-level ${touristLevelClass}`;
+        touristLevel.textContent = neighborhood.touristLevel.charAt(0).toUpperCase() + neighborhood.touristLevel.slice(1);
+        neighborhoodItem.appendChild(touristLevel);
+        
+        searchDropdown.appendChild(neighborhoodItem);
+      });
+      
+      // Attach event listeners to neighborhoods
+      attachDropdownEventListeners();
+      
+      // Add event listeners to breadcrumb navigation
+      breadcrumb.querySelector('[data-action="view-global"]').addEventListener('click', function(e) {
+        e.stopPropagation();
+        showGlobalView();
+      });
+      
+      if (country) {
+        breadcrumb.querySelector('[data-action="view-country"]').addEventListener('click', function(e) {
+          e.stopPropagation();
+          showCountryCitiesDropdown(country);
+        });
+      }
+      
+      // Show the dropdown
+      searchDropdown.classList.add('active');
+    }
+  }
+
+  // Show global view with popular countries and cities
+  function showGlobalView() {
+    searchDropdown.innerHTML = '';
+    
+    // Add popular countries section
+    const countriesHeader = document.createElement('div');
+    countriesHeader.className = 'search-dropdown-header';
+    countriesHeader.textContent = 'Popular Countries:';
+    searchDropdown.appendChild(countriesHeader);
+    
+    // Add top countries
+    const popularCountries = ['USA', 'France', 'Japan', 'Italy', 'Australia'];
+    popularCountries.forEach(country => {
+      const countryItem = document.createElement('div');
+      countryItem.className = 'search-dropdown-country';
+      countryItem.textContent = country;
+      countryItem.setAttribute('data-country', country);
+      searchDropdown.appendChild(countryItem);
+    });
+    
+    // Add popular cities section
+    const citiesHeader = document.createElement('div');
+    citiesHeader.className = 'search-dropdown-header';
+    citiesHeader.textContent = 'Popular Cities:';
+    searchDropdown.appendChild(citiesHeader);
+    
+    // Add top cities
+    const popularCities = ['New York', 'Paris', 'Tokyo', 'Rome', 'Sydney'];
+    popularCities.forEach(city => {
+      const cityItem = document.createElement('div');
+      cityItem.className = 'search-dropdown-city';
+      cityItem.textContent = city;
+      cityItem.setAttribute('data-city', city);
+      
+      // Add country information if available
+      const country = cityToCountry[city];
+      if (country) {
+        cityItem.setAttribute('data-parent-country', country);
+      }
+      
+      searchDropdown.appendChild(cityItem);
+    });
+    
+    // Attach event listeners
+    attachDropdownEventListeners();
+    
+    // Show the dropdown
+    searchDropdown.classList.add('active');
+  }
+
+  // Get class for tourist level
+  function getTouristLevelClass(level) {
+    switch(level) {
+      case 'high': return 'tourist-level-high';
+      case 'medium': return 'tourist-level-medium';
+      case 'low': return 'tourist-level-low';
+      default: return '';
+    }
+  }
+
   // Function to show city map
   function showCityMap(city, highlight = null) {
     if (locationDatabase[city]) {
@@ -1608,25 +2060,24 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
   
-  // Handle search input
+  // Add event listener to search input
   searchInput.addEventListener('input', function() {
-    const searchTerm = searchInput.value.trim();
+    const searchTerm = this.value.trim();
     updateSearchDropdown(searchTerm);
   });
   
-  // Hide dropdown when clicking outside
-  document.addEventListener('click', function(event) {
-    if (!searchInput.contains(event.target) && !searchDropdown.contains(event.target)) {
-      searchDropdown.classList.remove('active');
+  // Show global view when clicking on the empty search input
+  searchInput.addEventListener('click', function() {
+    if (this.value.trim() === '') {
+      showGlobalView();
     }
   });
   
-  // Show world map when clicking heatmap icon
-  heatmapIcon.addEventListener('click', function() {
-    cityMapContainer.classList.remove('active');
-    trapScoreContainer.classList.remove('active');
-    worldHeatmap.style.display = 'block';
-    worldHeatmap.scrollIntoView({ behavior: 'smooth' });
+  // Hide dropdown when clicking outside
+  document.addEventListener('click', function(e) {
+    if (!searchInput.contains(e.target) && !searchDropdown.contains(e.target)) {
+      searchDropdown.classList.remove('active');
+    }
   });
   
   // Add search functionality
